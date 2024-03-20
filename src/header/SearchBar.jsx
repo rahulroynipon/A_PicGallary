@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import useData from "../hook/useData";
 
 function SearchBar(props) {
@@ -6,6 +6,8 @@ function SearchBar(props) {
   const [tags, setTags] = useState([]);
   const [openSugg, setSugg] = useState(false);
   const AllData = useData(inputValue);
+  const containerRef = useRef(null);
+  const excludeRef = useRef(null); // Reference to the specific element to exclude from blur
 
   const suggTion = useCallback(() => {
     let allTag = AllData.flatMap((ele) =>
@@ -38,12 +40,31 @@ function SearchBar(props) {
     setInputValue("");
   };
 
-  const handleInputChange = (datainput) => {
-    setInputValue(datainput);
+  const handleInput = (e) => {
+    setInputValue(e.target.value);
+    setSugg(true);
+  };
+
+  const handleKeyUp = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(inputValue);
+    }
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      // Check if the active element is the excluded element
+      if (
+        !containerRef.current.contains(document.activeElement) &&
+        document.activeElement !== excludeRef.current
+      ) {
+        setSugg(false);
+      }
+    }, 0);
   };
 
   return (
-    <>
+    <div ref={containerRef}>
       <section className="relative w-full">
         <form
           className="flex border bg-stone-100"
@@ -53,9 +74,9 @@ function SearchBar(props) {
           }}
         >
           <input
-            onChange={(e) => handleInputChange(e.target.value)}
+            onInput={handleInput}
+            onKeyUp={handleKeyUp}
             onFocus={handleFocus}
-            onClick={handleFocus} // Added onClick event
             value={inputValue}
             className="w-full px-3 outline-none font-semibold bg-transparent"
             type="search"
@@ -79,10 +100,11 @@ function SearchBar(props) {
             {tags.map((item, index) => (
               <div
                 key={index}
-                onClick={() => suggationDivHandler(item)} // Changed to use function directly
+                onClick={() => suggationDivHandler(item)}
                 className={`${index == 0 ? "mt-3" : "mt-0"} ${
                   index == tags.length - 1 ? "mb-3" : "mb-0"
-                } font-bold opacity-50 py-1 hover:opacity-70 hover:bg-slate-100 px-4 transition-all`}
+                } cursor-pointer font-bold opacity-50 py-1 hover:opacity-70 hover:bg-slate-100 px-4 transition-all`}
+                ref={excludeRef} // Assign the ref to the specific element
               >
                 {item}
               </div>
@@ -90,7 +112,7 @@ function SearchBar(props) {
           </div>
         )}
       </section>
-    </>
+    </div>
   );
 }
 
