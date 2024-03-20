@@ -45,7 +45,7 @@ function Photo(props) {
                 >
                   <img
                     className="h-4 md:h-6  md:block"
-                    src="./src/assets/download-minimalistic-svgrepo-com.svg"
+                    src="./A_PicGallary/src/assets/download.svg"
                     alt="Download"
                   />
                 </button>
