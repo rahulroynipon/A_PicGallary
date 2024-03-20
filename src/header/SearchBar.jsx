@@ -39,7 +39,6 @@ function SearchBar(props) {
   };
 
   const handleInputChange = (datainput) => {
-    setSugg(true);
     setInputValue(datainput);
   };
 
