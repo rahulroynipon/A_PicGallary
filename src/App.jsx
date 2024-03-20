@@ -9,7 +9,7 @@ function App() {
   return (
     <main>
       <Header setSearchData={setSearchData} />
-      <Photo searchData={searchData} />
+      <Photo searchData={searchData} setSearchData={setSearchData} />
     </main>
   );
 }

@@ -4,7 +4,7 @@ import useData from "../hook/useData";
 function SearchBar(props) {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
-  const [openSugg, setSugg] = useState(true);
+  const [openSugg, setSugg] = useState(false); // Changed default state to false
   const AllData = useData(inputValue);
 
   const suggTion = useCallback(() => {
@@ -23,9 +23,25 @@ function SearchBar(props) {
     suggTion();
   }, [inputValue, AllData]);
 
+  // Handling onFocus event for mobile devices
+  const handleFocus = () => {
+    setSugg(true);
+  };
+
   const suggationDivHenderler = (item) => {
     setInputValue(item);
     setSugg(false);
+  };
+
+  const OnSubmitHandeler = (submidata) => {
+    props.setSearchData(submidata);
+    setSugg(false);
+    setInputValue("");
+  };
+
+  const inputOnChange = (datainput) => {
+    setInputValue(datainput);
+    setSugg(true);
   };
 
   return (
@@ -36,11 +52,10 @@ function SearchBar(props) {
           onSubmit={(e) => e.preventDefault()}
         >
           <input
-            onChange={(e) => setInputValue(e.target.value)}
-            onClick={() => setSugg(true)}
-            onKeyDown={(e) =>
-              e.key == "Enter" ? setSugg(false) : setSugg(true)
-            }
+            onChange={(e) => {
+              inputOnChange(e.target.value);
+            }}
+            onFocus={handleFocus} // Changed to onFocus
             value={inputValue}
             className="w-full px-3 outline-none font-semibold 
             bg-transparent "
@@ -48,7 +63,9 @@ function SearchBar(props) {
             placeholder="Search photo"
           />
           <button
-            onClick={() => props.setSearchData(inputValue)}
+            onClick={() => {
+              OnSubmitHandeler(inputValue);
+            }}
             className="flex gap-2 item-center justify-center
              border py-2 px-6 bg-white hover:bg-slate-50 
             text-stone-600 hover:text-stone-800 transition-all"
