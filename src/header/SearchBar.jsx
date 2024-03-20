@@ -4,7 +4,7 @@ import useData from "../hook/useData";
 function SearchBar(props) {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
-  const [openSugg, setSugg] = useState(false);
+  const [openSugg, setSugg] = useState(true);
   const AllData = useData(inputValue);
 
   const suggTion = useCallback(() => {
