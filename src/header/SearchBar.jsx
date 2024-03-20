@@ -39,8 +39,8 @@ function SearchBar(props) {
   };
 
   const handleInputChange = (datainput) => {
-    setInputValue(datainput);
     setSugg(true);
+    setInputValue(datainput);
   };
 
   return (
@@ -75,7 +75,7 @@ function SearchBar(props) {
           </button>
         </form>
 
-        {openSugg && inputValue && (
+        {openSugg && (
           <div className="absolute bg-white max-h-[400px] overflow-y-auto w-full border px-2 transition-all duration-200">
             {tags.map((item, index) => (
               <div
