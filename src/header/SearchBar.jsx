@@ -4,7 +4,7 @@ import useData from "../hook/useData";
 function SearchBar(props) {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState([]);
-  const [openSugg, setSugg] = useState(false); // Changed default state to false
+  const [openSugg, setSugg] = useState(false);
   const AllData = useData(inputValue);
 
   const suggTion = useCallback(() => {
@@ -23,23 +23,22 @@ function SearchBar(props) {
     suggTion();
   }, [inputValue, AllData]);
 
-  // Handling onFocus event for mobile devices
   const handleFocus = () => {
     setSugg(true);
   };
 
-  const suggationDivHenderler = (item) => {
+  const suggationDivHandler = (item) => {
     setInputValue(item);
     setSugg(false);
   };
 
-  const OnSubmitHandeler = (submidata) => {
+  const handleSubmit = (submidata) => {
     props.setSearchData(submidata);
     setSugg(false);
     setInputValue("");
   };
 
-  const inputOnChange = (datainput) => {
+  const handleInputChange = (datainput) => {
     setInputValue(datainput);
     setSugg(true);
   };
@@ -49,27 +48,22 @@ function SearchBar(props) {
       <section className="relative w-full">
         <form
           className="flex border bg-stone-100"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(inputValue);
+          }}
         >
           <input
-            onChange={(e) => {
-              inputOnChange(e.target.value);
-            }}
-            onTouchStart={() => setSugg(true)}
-            onFocus={handleFocus} // Changed to onFocus
+            onChange={(e) => handleInputChange(e.target.value)}
+            onFocus={handleFocus}
+            onClick={handleFocus} // Added onClick event
             value={inputValue}
-            className="w-full px-3 outline-none font-semibold 
-            bg-transparent "
+            className="w-full px-3 outline-none font-semibold bg-transparent"
             type="search"
             placeholder="Search photo"
           />
           <button
-            onClick={() => {
-              OnSubmitHandeler(inputValue);
-            }}
-            className="flex gap-2 item-center justify-center
-             border py-2 px-6 bg-white hover:bg-slate-50 
-            text-stone-600 hover:text-stone-800 transition-all"
+            className="flex gap-2 item-center justify-center border py-2 px-6 bg-white hover:bg-slate-50 text-stone-600 hover:text-stone-800 transition-all"
             type="submit"
           >
             <img
@@ -86,10 +80,8 @@ function SearchBar(props) {
             {tags.map((item, index) => (
               <div
                 key={index}
-                onClick={(e) => {
-                  suggationDivHenderler(e.target.innerText);
-                }}
-                className={`${index == 0 ? "mt-3" : "mt-0"}  ${
+                onClick={() => suggationDivHandler(item)} // Changed to use function directly
+                className={`${index == 0 ? "mt-3" : "mt-0"} ${
                   index == tags.length - 1 ? "mb-3" : "mb-0"
                 } font-bold opacity-50 py-1 hover:opacity-70 hover:bg-slate-100 px-4 transition-all`}
               >
