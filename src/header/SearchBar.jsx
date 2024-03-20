@@ -46,6 +46,7 @@ function SearchBar(props) {
   };
 
   const handleKeyUp = (e) => {
+    setInputValue(e.target.value);
     if (e.key === "Enter") {
       handleSubmit(inputValue);
     }
