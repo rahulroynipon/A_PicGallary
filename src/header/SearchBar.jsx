@@ -55,6 +55,7 @@ function SearchBar(props) {
             onChange={(e) => {
               inputOnChange(e.target.value);
             }}
+            onTouchStart={() => setSugg(true)}
             onFocus={handleFocus} // Changed to onFocus
             value={inputValue}
             className="w-full px-3 outline-none font-semibold 
